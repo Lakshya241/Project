@@ -1,0 +1,16 @@
+{
+  "complaints": [
+    {
+      "id": "COMP001",
+      "studentId": "24CET345",
+      "studentName": "Student User",
+      "studentEmail": "student@campus.edu",
+      "category": "Academics",
+      "title": "Sample Complaint",
+      "description": "This is a sample complaint",
+      "status": "pending",
+      "createdAt": "2026-01-14T10:00:00Z",
+      "updatedAt": "2026-01-14T10:00:00Z"
+    }
+  ]
+}
