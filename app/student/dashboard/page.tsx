@@ -38,7 +38,6 @@ export default function StudentDashboard() {
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Support Ticket</h1>
             <p className="text-gray-600">Submit a new complaint and we'll help resolve it</p>
           </div>
-
           <CreateTicketForm studentId={user.id} studentName={user.name} studentEmail={user.email} />
         </div>
       </main>

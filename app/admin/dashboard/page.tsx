@@ -15,6 +15,9 @@ interface Complaint {
   status: "pending" | "in-progress" | "resolved"
   createdAt: string
   updatedAt: string
+  resolvedDate?: string
+  resolvedTime?: string
+  adminNotes?: string
 }
 
 export default function AdminDashboard() {
@@ -26,6 +29,63 @@ export default function AdminDashboard() {
   const [mounted, setMounted] = useState(false)
   const [filter, setFilter] = useState<"All" | "Pending" | "Resolved">("All")
   const [searchQuery, setSearchQuery] = useState("")
+  const [showResolutionModal, setShowResolutionModal] = useState(false)
+  const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null)
+  const [resolutionData, setResolutionData] = useState({
+    resolvedDate: "",
+    resolvedTime: "",
+    adminNotes: "",
+  })
+
+  const handleMarkResolved = (complaint: Complaint) => {
+    setSelectedComplaint(complaint)
+    setShowResolutionModal(true)
+    setResolutionData({
+      resolvedDate: new Date().toISOString().split("T")[0],
+      resolvedTime: new Date().toTimeString().slice(0, 5),
+      adminNotes: "",
+    })
+  }
+
+  const handleSubmitResolution = async () => {
+    if (!selectedComplaint || !resolutionData.resolvedDate || !resolutionData.resolvedTime) {
+      alert("Please fill in all fields")
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/complaints/${selectedComplaint.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "resolved",
+          resolvedDate: resolutionData.resolvedDate,
+          resolvedTime: resolutionData.resolvedTime,
+          adminNotes: resolutionData.adminNotes,
+        }),
+      })
+
+      if (response.ok) {
+        setComplaints(
+          complaints.map((c) =>
+            c.id === selectedComplaint.id
+              ? {
+                  ...c,
+                  status: "resolved",
+                  adminNotes: resolutionData.adminNotes,
+                  resolvedDate: resolutionData.resolvedDate,
+                  resolvedTime: resolutionData.resolvedTime,
+                }
+              : c,
+          ),
+        )
+        setShowResolutionModal(false)
+        setSelectedComplaint(null)
+      }
+    } catch (error) {
+      console.error("Failed to update complaint", error)
+    }
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -225,18 +285,7 @@ export default function AdminDashboard() {
                     <div className="flex gap-2">
                       {complaint.status !== "resolved" && (
                         <button
-                          onClick={async () => {
-                            const response = await fetch(`/api/complaints/${complaint.id}`, {
-                              method: "PATCH",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ status: "resolved" }),
-                            })
-                            if (response.ok) {
-                              setComplaints(
-                                complaints.map((c) => (c.id === complaint.id ? { ...c, status: "resolved" } : c)),
-                              )
-                            }
-                          }}
+                          onClick={() => handleMarkResolved(complaint)}
                           className="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded-full transition-colors"
                         >
                           Mark Resolved
@@ -250,6 +299,84 @@ export default function AdminDashboard() {
           )}
         </div>
       </main>
+
+      {/* Resolution Modal */}
+      {showResolutionModal && selectedComplaint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md animate-in zoom-in duration-300">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Mark as Resolved</h3>
+            <p className="text-gray-600 text-sm mb-6">
+              Ticket: <strong>{selectedComplaint.title}</strong>
+            </p>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Resolution Date</label>
+                  <input
+                    type="date"
+                    value={resolutionData.resolvedDate}
+                    onChange={(e) =>
+                      setResolutionData((prev) => ({
+                        ...prev,
+                        resolvedDate: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Resolution Time</label>
+                  <input
+                    type="time"
+                    value={resolutionData.resolvedTime}
+                    onChange={(e) =>
+                      setResolutionData((prev) => ({
+                        ...prev,
+                        resolvedTime: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Admin Response & Notes</label>
+                <textarea
+                  value={resolutionData.adminNotes}
+                  onChange={(e) =>
+                    setResolutionData((prev) => ({
+                      ...prev,
+                      adminNotes: e.target.value,
+                    }))
+                  }
+                  placeholder="Describe how this complaint was resolved..."
+                  className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none resize-none h-24"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => {
+                    setShowResolutionModal(false)
+                    setSelectedComplaint(null)
+                  }}
+                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmitResolution}
+                  className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors transform hover:scale-105"
+                >
+                  Confirm Resolution
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes slideInUp {

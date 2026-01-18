@@ -34,8 +34,11 @@ function RotatingCube() {
 
 export default function Hero() {
   const [adminRevealed, setAdminRevealed] = useState(false)
+  const [adminReviewRevealed, setAdminReviewRevealed] = useState(false)
   const clickCountRef = useRef(0)
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const reviewClickCountRef = useRef(0)
+  const reviewClickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleTextClick = () => {
     clickCountRef.current += 1
@@ -50,6 +53,23 @@ export default function Hero() {
     } else {
       clickTimeoutRef.current = setTimeout(() => {
         clickCountRef.current = 0
+      }, 500)
+    }
+  }
+
+  const handleAdminReviewClick = () => {
+    reviewClickCountRef.current += 1
+
+    if (reviewClickTimeoutRef.current) {
+      clearTimeout(reviewClickTimeoutRef.current)
+    }
+
+    if (reviewClickCountRef.current === 3) {
+      setAdminReviewRevealed(true)
+      reviewClickCountRef.current = 0
+    } else {
+      reviewClickTimeoutRef.current = setTimeout(() => {
+        reviewClickCountRef.current = 0
       }, 500)
     }
   }
@@ -83,14 +103,14 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/auth?role=student">
+            <Link href="/auth/student">
               <button className="px-8 py-4 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg hover:shadow-xl">
                 Student Portal
               </button>
             </Link>
 
             {adminRevealed && (
-              <Link href="/auth?role=admin">
+              <Link href="/auth/admin">
                 <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg hover:shadow-xl animate-in fade-in scale-in duration-500">
                   Admin Dashboard
                 </button>
@@ -102,6 +122,25 @@ export default function Hero() {
             <p className="text-sm text-purple-600 font-semibold animate-in fade-in duration-500">
               ✨ You found the secret entrance! Welcome, Admin.
             </p>
+          )}
+
+          <p
+            onClick={handleAdminReviewClick}
+            className="text-sm text-gray-500 hover:text-gray-700 cursor-pointer transition-colors select-none"
+            title="Triple-click to reveal admin review access"
+          >
+            Need help? Contact our support team for detailed complaint analysis and resolution tracking.
+          </p>
+
+          {adminReviewRevealed && (
+            <div className="p-4 bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-300 rounded-lg animate-in fade-in duration-500">
+              <p className="text-sm text-amber-900 font-semibold mb-2">🔑 Admin Review Access Unlocked!</p>
+              <Link href="/auth/admin">
+                <button className="w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all duration-300 font-semibold">
+                  Enter Admin Review Portal
+                </button>
+              </Link>
+            </div>
           )}
         </div>
 

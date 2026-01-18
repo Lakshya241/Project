@@ -8,9 +8,33 @@
       "category": "Academics",
       "title": "Sample Complaint",
       "description": "This is a sample complaint",
-      "status": "pending",
+      "status": "resolved",
       "createdAt": "2026-01-14T10:00:00Z",
-      "updatedAt": "2026-01-14T10:00:00Z"
+      "updatedAt": "2026-01-15T11:26:11.793Z"
+    },
+    {
+      "id": "COMP0002",
+      "studentId": "24CET345",
+      "studentName": "Student User",
+      "studentEmail": "student@campus.edu",
+      "category": "Food & Dining",
+      "title": "Not getting good food ",
+      "description": "abc",
+      "status": "resolved",
+      "createdAt": "2026-01-15T11:25:39.869Z",
+      "updatedAt": "2026-01-15T11:26:04.626Z"
+    },
+    {
+      "id": "COMP0003",
+      "studentId": "24CET345",
+      "studentName": "Student User",
+      "studentEmail": "student@campus.edu",
+      "category": "Academics",
+      "title": "AVC",
+      "description": "FSH",
+      "status": "pending",
+      "createdAt": "2026-01-18T07:56:07.988Z",
+      "updatedAt": "2026-01-18T07:56:07.989Z"
     }
   ]
 }
