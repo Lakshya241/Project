@@ -95,7 +95,6 @@ export default function Hero() {
           <p
             onClick={handleTextClick}
             className="text-xl text-gray-600 leading-relaxed cursor-pointer hover:text-indigo-600 transition-colors group relative select-none"
-            title="Psst... click 3 times here to reveal the admin entrance!"
           >
             Lodge, track, and resolve complaints efficiently. Our platform helps students voice their concerns and
             administrators manage them with ease.
@@ -127,7 +126,6 @@ export default function Hero() {
           <p
             onClick={handleAdminReviewClick}
             className="text-sm text-gray-500 hover:text-gray-700 cursor-pointer transition-colors select-none"
-            title="Triple-click to reveal admin review access"
           >
             Need help? Contact our support team for detailed complaint analysis and resolution tracking.
           </p>
