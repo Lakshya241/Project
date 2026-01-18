@@ -5,6 +5,18 @@
       "password": "123456",
       "name": "Student User",
       "email": "student@campus.edu"
+    },
+    {
+      "id": "24CET346",
+      "name": "ABC",
+      "email": "abc@gmail.com",
+      "password": "Lakshya@241"
+    },
+    {
+      "id": "24CET234",
+      "name": "XYZ",
+      "email": "xyz@gmail.com",
+      "password": "234567"
     }
   ],
   "admins": [
