@@ -35,6 +35,18 @@
       "status": "pending",
       "createdAt": "2026-01-18T07:56:07.988Z",
       "updatedAt": "2026-01-18T07:56:07.989Z"
+    },
+    {
+      "id": "COMP0004",
+      "studentId": "24CET346",
+      "studentName": "ABC",
+      "studentEmail": "abc@gmail.com",
+      "category": "Security",
+      "title": "My bike got stolen ",
+      "description": "gsj",
+      "status": "pending",
+      "createdAt": "2026-01-18T11:09:13.447Z",
+      "updatedAt": "2026-01-18T11:09:13.447Z"
     }
   ]
 }
