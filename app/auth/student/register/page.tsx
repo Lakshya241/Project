@@ -67,7 +67,7 @@ export default function StudentRegister() {
       localStorage.setItem("token", data.token)
 
       document.cookie = `token=${data.token}; path=/`
-      document.cookie = `role=admin; path=/`
+      document.cookie = `role=student; path=/`
 
       router.push("/admin/dashboard")
 

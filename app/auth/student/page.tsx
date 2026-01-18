@@ -14,34 +14,30 @@ export default function StudentLoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError("")
+    setLoading(true)
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, password, role: "student" }),
       })
 
-      const data = await res.json()
+      const data = await response.json()
 
-      if (!res.ok) {
+      if (!response.ok) {
         setError(data.error || "Login failed")
         setLoading(false)
         return
-      }// after successful login
-      localStorage.setItem("user", JSON.stringify(data.user))
-      localStorage.setItem("token", data.token)
+      }
 
-      document.cookie = `token=${data.token}; path=/`
-      document.cookie = `role=student; path=/`
+      document.cookie = `token=${data.token}; path=/; max-age=86400`
+      document.cookie = `user=${JSON.stringify(data.user)}; path=/; max-age=86400`
 
       router.push("/student/dashboard")
-
-    } catch {
-      setError("Network error")
-    } finally {
+    } catch (err) {
+      setError("Network error. Please try again.")
       setLoading(false)
     }
   }
