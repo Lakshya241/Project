@@ -62,15 +62,13 @@ export default function StudentRegister() {
         setLoading(false)
         return
       }
-
       localStorage.setItem("user", JSON.stringify(data.user))
       localStorage.setItem("token", data.token)
 
       document.cookie = `token=${data.token}; path=/`
       document.cookie = `role=student; path=/`
 
-      router.push("/admin/dashboard")
-
+      router.push("/auth/student")
     } catch (err) {
       setError("Network error. Please try again.")
       setLoading(false)
