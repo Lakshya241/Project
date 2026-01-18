@@ -31,9 +31,11 @@ export default function StudentLoginPage() {
         setLoading(false)
         return
       }
+      localStorage.setItem("user", JSON.stringify(data.user))
+      localStorage.setItem("token", data.token)
 
-      document.cookie = `token=${data.token}; path=/; max-age=86400`
-      document.cookie = `user=${JSON.stringify(data.user)}; path=/; max-age=86400`
+      document.cookie = `token=${data.token}; path=/`
+      document.cookie = `role=student; path=/`
 
       router.push("/student/dashboard")
     } catch (err) {
